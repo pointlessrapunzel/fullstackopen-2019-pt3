@@ -4,7 +4,23 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
 app.use(bodyParser.json())
-app.use(morgan('combined'))
+
+morgan.token('body', (req) => {
+  return JSON.stringify(req.body)
+})
+
+// log all request except POST
+app.use(morgan('tiny', {
+  skip: (req) => req.method === "POST"
+}))
+
+// log only POST requests
+app.use(
+  morgan(
+    ':method :url :status :res[content-length] - :response-time ms :body',
+    { skip: (req) => req.method !== "POST" }
+  )
+)
 
 let persons = [
   {
