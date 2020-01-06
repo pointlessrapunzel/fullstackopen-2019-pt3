@@ -98,6 +98,30 @@ app.post('/api/persons', (req, res) => {
   })
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: 'name and/or number missing'
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      if (updatedPerson) res.json(updatedPerson.toJSON())
+      else res.status(404).json({ 
+        error: "has already been deleted from the server" 
+      })
+    })
+    .catch(err => next(err))
+})
+
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
 }
