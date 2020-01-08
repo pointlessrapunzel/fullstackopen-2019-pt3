@@ -28,7 +28,7 @@ const listPersons = () => {
     result.forEach(person => {
       console.log(person.name, person.number)
     })
-  mongoose.connection.close()
+    mongoose.connection.close()
   })
 }
 
@@ -38,7 +38,7 @@ const addPerson = () => {
     number: process.argv[4],
   })
 
-  person.save().then(response => {
+  person.save().then(() => {
     console.log(`added ${person.name} number ${person.number} to phonebook`)
     mongoose.connection.close()
   })
